@@ -7,7 +7,7 @@ from functools import wraps
 from typing import Callable
 
 
-_redis = redis.Redis()
+redis_storage = redis.Redis()
 
 
 def cache(fn: Callable) -> Callable:
@@ -15,14 +15,14 @@ def cache(fn: Callable) -> Callable:
     @wraps(fn)
     def caching(url: str) -> str:
         """ Caches the response content from a HTTP request. """
-        _redis.incr("count:{}".format(url))
-        output = _redis.get("output:{}".format(url))
+        redis_storage.incr(f"count:{url}")
+        output = redis_storage.get(f"output:{url}")
 
         if output:
             return output.decode('utf-8')
         output = fn(url)
-        _redis.set("count:{}".format(url), 0)
-        _redis.setex("output:{}".format(url), 10, output)
+        redis_storage.set(f"count:{url}", 0)
+        redis_storage.setex(f"output:{url}", 10, output)
         return output
     return caching
 
