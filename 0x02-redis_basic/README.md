@@ -1,0 +1,1 @@
+This folder contains the Basics of a No SQL Storage using Redis.
