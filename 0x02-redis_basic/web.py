@@ -26,7 +26,7 @@ def cache(fn: Callable) -> Callable:
         return output
     return caching
 
-
+@cache
 def get_page(url: str) -> str:
     """ Obtains the HTML content of an url. """
     return requests.get(url).text
